@@ -1,68 +1,88 @@
 import turtle
+import random
 
-# Set up the screen
+# Screen setup
 screen = turtle.Screen()
-screen.title("Ocean Background")
+screen.title("Ocean Ecosystem")
 screen.setup(width=1000, height=600)
-screen.bgcolor("lightblue")  # Sky / water background
+screen.bgcolor("lightblue")
 
-# Draw the ocean
-ocean = turtle.Turtle()
-ocean.hideturtle()
-ocean.speed(0)
-ocean.penup()
-ocean.goto(-500, -100)
-ocean.pendown()
-ocean.color("deep sky blue")
-ocean.begin_fill()
-ocean.goto(500, -100)
-ocean.goto(500, -300)
-ocean.goto(-500, -300)
-ocean.goto(-500, -100)
-ocean.end_fill()
+# Draw ocean floor
+floor = turtle.Turtle()
+floor.hideturtle()
+floor.speed(0)
+floor.penup()
+floor.goto(-500, -300)
+floor.pendown()
+floor.color("sandybrown")
+floor.begin_fill()
+floor.goto(500, -300)
+floor.goto(500, -200)
+floor.goto(-500, -200)
+floor.goto(-500, -300)
+floor.end_fill()
 
-# Draw the sun
-sun = turtle.Turtle()
-sun.hideturtle()
-sun.penup()
-sun.goto(350, 200)
-sun.color("yellow")
-sun.begin_fill()
-sun.circle(50)
-sun.end_fill()
+# Draw coral function
+def draw_coral(x, y, color="red"):
+    coral = turtle.Turtle()
+    coral.hideturtle()
+    coral.speed(0)
+    coral.penup()
+    coral.goto(x, y)
+    coral.pendown()
+    coral.color(color)
+    coral.width(3)
+    for _ in range(5):
+        coral.goto(x + random.randint(-10, 10), y + random.randint(20, 50))
+        coral.goto(x, y)
 
-# Draw some waves
-waves = turtle.Turtle()
-waves.hideturtle()
-waves.speed(0)
-waves.penup()
-for y in range(-120, -280, -20):
-    waves.goto(-500, y)
-    waves.pendown()
-    waves.color("skyblue")
-    waves.width(2)
-    for x in range(-500, 500, 20):
-        waves.goto(x, y + ((x % 40) - 20)//4)
-    waves.penup()
+# Add multiple corals
+for i in range(-400, 401, 100):
+    draw_coral(i, -200, random.choice(["red","orange","pink"]))
 
-# Draw some clouds
-cloud = turtle.Turtle()
-cloud.hideturtle()
-cloud.penup()
-cloud.goto(-300, 250)
-cloud.color("white")
-cloud.begin_fill()
-for _ in range(2):
-    cloud.circle(40,90)
-    cloud.circle(40//2,90)
-cloud.end_fill()
+# Draw seaweed function
+def draw_seaweed(x, y, color="green"):
+    weed = turtle.Turtle()
+    weed.hideturtle()
+    weed.speed(0)
+    weed.penup()
+    weed.goto(x, y)
+    weed.pendown()
+    weed.color(color)
+    for _ in range(3):
+        weed.goto(x + random.randint(-5,5), y + random.randint(30,60))
+        weed.goto(x, y)
 
-cloud.goto(-200, 230)
-cloud.begin_fill()
-for _ in range(2):
-    cloud.circle(30,90)
-    cloud.circle(30//2,90)
-cloud.end_fill()
+# Add seaweed
+for i in range(-450, 451, 50):
+    draw_seaweed(i, -200)
+
+# Draw some fish
+fish_colors = ["yellow", "orange", "purple", "pink"]
+fish_list = []
+
+for _ in range(15):
+    f = turtle.Turtle()
+    f.shape("turtle")
+    f.color(random.choice(fish_colors))
+    f.penup()
+    f.speed(1)
+    f.goto(random.randint(-450,450), random.randint(-100,200))
+    fish_list.append(f)
+
+# Make fish swim randomly
+def move_fish():
+    for f in fish_list:
+        f.forward(random.randint(5, 15))
+        f.right(random.randint(-30,30))
+        x, y = f.position()
+        if x > 500: f.goto(-500, y)
+        if x < -500: f.goto(500, y)
+        if y > 300: f.goto(x, -300)
+        if y < -300: f.goto(x, 300)
+    screen.ontimer(move_fish, 250)
+
+move_fish()
 
 # Keep window open
 turtle.done()
